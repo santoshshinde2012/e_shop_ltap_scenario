@@ -1,6 +1,8 @@
 # Coding standards for this repo
 
-Follows [`/voice/coding-standards.md`](../../../voice/coding-standards.md) in the blog workspace.
+Follows [`voice/coding-standards.md`](https://github.com/santoshshinde2012/blogs/blob/main/voice/coding-standards.md)
+in the writing workspace this demo was built for. This file travels with the code, so the link is
+absolute — it resolves both here and in the standalone repo.
 
 - **S** one job per module — `repository.py` (read the CSVs), one rule per file under `rules/`,
   `lag_model.py` (staleness paths), `decision.py` (the five-question walk),
