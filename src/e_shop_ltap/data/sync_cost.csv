@@ -1,0 +1,6 @@
+line_item,monthly_usd,retired_by_ltap,note
+Kafka Connect and Debezium cluster,4300,true,three workers plus the schema registry
+Spark merge job cluster,9100,true,runs every five minutes all day
+Nightly reconciliation job,1200,true,proves the two copies still match
+Duplicate storage for the two Gold copies,3400,true,the second copy itself
+Lakebase pilot compute,5200,false,what replaces the tier - an estimate until the pilot is billed

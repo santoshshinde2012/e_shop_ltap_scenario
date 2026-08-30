@@ -1,0 +1,6 @@
+question_id,question,answer,evidence
+Q1,Do you maintain CDC or replication jobs whose only purpose is to copy operational data for analytics?,yes,Jobs J01-J03 exist only to keep the two copies aligned
+Q2,Is a real use case blocked by stale data?,yes,Fraud features and the inventory agent both read an 8-minute-old copy
+Q3,Does the workload need strict consistency-critical transactions today?,yes,Checkout moves money and holds row-level locks
+Q4,Will agents read and act on this data?,yes,Two support agents and the fraud scorer read gold tables
+Q5,None of the above?,no,

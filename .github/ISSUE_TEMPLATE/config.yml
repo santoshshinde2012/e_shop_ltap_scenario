@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: The article this repo accompanies
+    url: https://github.com/santoshshinde2012/blogs/tree/main/articles/001-ltap-end-of-pipelines
+    about: The scenario, the sources and the reasoning behind each rule live in the article.

@@ -1,0 +1,51 @@
+=== E-Shop — what LTAP actually retires ===
+
+Second-copy rule (what the job does, not what it is called)
+  Retires 3 of 12:
+    J01  Debezium CDC connector (Postgres -> Kafka)
+    J02  Spark merge into gold.orders
+    J03  Nightly reconciliation of row counts and sums
+  Keeps 9 — ingestion, transforms, quality tests, features, reporting.
+
+Headline reading ("the end of pipelines")
+  Retires 12 of 12 — wrong count.
+    would retire  J04  Supplier catalogue feed ingest
+    would retire  J05  Carrier tracking feed ingest
+    would retire  J06  Silver: order dedupe and currency normalisation
+    ... and 6 more that keep the data trustworthy
+
+Name keyword scan (grep the schedule)
+  Retires 3 of 12 — right count, wrong list.
+    would retire  J07  Silver: returns and refunds merge
+    would keep    J03  Nightly reconciliation of row counts and sums
+
+--- Staleness from committed write to the read that acts on it (p95) ---
+  Today - Postgres commit to a fraud feature, through CDC
+       480.0 s (8.0 min)
+    dominated by: Wait for the next merge window (300 s)
+  LTAP - streaming feature to the Lakebase-backed online store
+         0.2 s
+    dominated by: Stream to the Lakebase-backed online store (0.2 s)
+  LTAP - Postgres commit to an analytical read on Delta
+        15.1 s
+    dominated by: Lakebase change data feed flush to Delta (15 s)
+  Feature path 2400x faster; analytical path 31.8x faster.
+  Neither is zero. The flush interval is still there; it is no longer yours to operate.
+
+--- Sync tier, monthly ---
+  Kafka Connect and Debezium cluster            $4,300  (retired)
+  Spark merge job cluster                       $9,100  (retired)
+  Nightly reconciliation job                    $1,200  (retired)
+  Duplicate storage for the two Gold copies     $3,400  (retired)
+  Lakebase pilot compute                        $5,200  (replaces)
+  ----------------------------------------------------
+  Sync tier retired                            $18,000
+  Less what replaces it (estimate)             -$5,200
+  Net, to be confirmed by the pilot bill       $12,800
+
+--- Decision ---
+  Level: pilot
+    because sync-only jobs exist, so there is something for LTAP to retire (Jobs J01-J03 exist only to keep the two copies aligned)
+    because a real use case is blocked by stale data (Fraud features and the inventory agent both read an 8-minute-old copy)
+    brake:  read path only - Checkout moves money and holds row-level locks
+    first:  governance before wider access - Two support agents and the fraud scorer read gold tables

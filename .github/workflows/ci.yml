@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: lint · typecheck · test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Type-check
+        run: mypy
+      - name: Test
+        run: pytest --cov --cov-report=xml
+      - name: Demo (three readings of one inventory)
+        run: |
+          e-shop-ltap
+          e-shop-ltap --json
+      - name: The committed sample output still matches a real run
+        run: |
+          e-shop-ltap > /tmp/actual.txt
+          diff -u docs/sample_output.txt /tmp/actual.txt
+
+  build:
+    name: package builds and installs clean
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Build sdist + wheel
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+          twine check dist/*
+      - name: Install the wheel in a clean venv and run it
+        run: |
+          python -m venv /tmp/clean && /tmp/clean/bin/pip install -q dist/*.whl
+          /tmp/clean/bin/e-shop-ltap --json
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/

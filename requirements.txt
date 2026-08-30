@@ -1,0 +1,2 @@
+# The demo has no runtime dependencies — the standard library is enough.
+# Kept so `pip install -r requirements.txt` behaves the way people expect.

@@ -1,0 +1,7 @@
+path,stage,p95_seconds,note
+two_copy_cdc,WAL capture by the Debezium connector,15,replication slot to Kafka topic
+two_copy_cdc,Wait for the next merge window,300,the 5-minute schedule dominates
+two_copy_cdc,Spark merge into gold.orders,165,measured p95 job runtime
+ltap_feature_path,Stream to the Lakebase-backed online store,0.2,Databricks-reported p99 for streaming features
+ltap_analytical_path,Lakebase change data feed flush to Delta,15,documented batch flush interval on the managed sync
+ltap_analytical_path,Analytical read on the flushed table,0.1,Lakehouse//RT target for a selective read

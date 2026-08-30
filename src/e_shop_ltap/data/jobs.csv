@@ -1,0 +1,13 @@
+job_id,name,schedule,source,target,transform_kind,external_input,downstream
+J01,Debezium CDC connector (Postgres -> Kafka),continuous,postgres,kafka,copy,false,J02
+J02,Spark merge into gold.orders,every 5 min,kafka,delta_gold,copy,false,J09;J10
+J03,Nightly reconciliation of row counts and sums,daily 02:00,postgres+delta_gold,report,compare,false,
+J04,Supplier catalogue feed ingest,daily 01:00,sftp_supplier,delta_bronze,derive,true,J06
+J05,Carrier tracking feed ingest,hourly,carrier_api,delta_bronze,derive,true,J06
+J06,Silver: order dedupe and currency normalisation,every 30 min,delta_bronze,delta_silver,derive,false,J07;J08
+J07,Silver: returns and refunds merge,every 30 min,delta_silver,delta_silver,derive,false,J08;J12
+J08,Data-quality expectations on Silver and Gold,every 30 min,delta_silver+delta_gold,quality_report,validate,false,
+J09,Fraud feature build,every 5 min,delta_gold,feature_store,derive,false,
+J10,gold.inventory_daily aggregate,hourly,delta_gold,delta_gold,aggregate,false,J11
+J11,Executive reporting refresh,daily 06:00,delta_gold,bi_dashboards,aggregate,false,
+J12,Finance close extract,monthly,delta_silver,finance_erp,aggregate,false,
