@@ -3,6 +3,7 @@
 [![CI](https://github.com/santoshshinde2012/e_shop_ltap_scenario/actions/workflows/ci.yml/badge.svg)](https://github.com/santoshshinde2012/e_shop_ltap_scenario/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Buy Me a Coffee](https://img.shields.io/badge/buymeacoffee-black?style=for-the-badge&logo=buymeacoffee&logoColor=white)](https://buymeacoffee.com/santoshshin)
 
 **Count what LTAP actually retires from a pipeline inventory.** Companion code for *The Second Copy
 Problem: What LTAP Actually Removes*.
